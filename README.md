@@ -30,6 +30,11 @@ LiveData 遵循观察者模式。当生命周期状态发生变化时，LiveData
 
 代码例子如下
 ```
+ public class MainActivity extends AppCompatActivity implements View.OnClickListener  {
+
+    private MainViewModel viewModel;
+    private ActivityMainBinding binding;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,6 +75,45 @@ LiveData 遵循观察者模式。当生命周期状态发生变化时，LiveData
             }
         });
     }
+
+    @Override
+    public void onClick(View view) {
+        if (view.getId() == R.id.tv_add) {
+            // LiveData 粘性消息，当我先处理viewModel.getContent().setValue("新内容");，后处理下面代码时出现它同时收到了新内容的文案
+            // 这个时候其实这个数据 其实不是我们想要的，如果规避这样的粘性消息就引出了 SingleLiveEvent
+            // Event 包装事件也是可以，2种处理方式
+
+            // 注册订阅者观察LiveData数据变化(默认LiveData 粘性)
+            viewModel.getContent().observe(this, new Observer<String>() {
+                @Override
+                public void onChanged(String s) {
+                    Log.i(MainActivity.class.getSimpleName(), "content = " + s);
+                }
+            });
+            // 注册订阅者观察SingleLiveEvent数据变化 (SingleLiveEvent 非粘性)
+            viewModel.getDesc().observe(this, new Observer<String>() {
+                @Override
+                public void onChanged(String s) {
+                    Log.i(MainActivity.class.getSimpleName(), "desc = " + s);
+                }
+            });
+
+            // 注册订阅者观察SingleLiveEvent数据变化 (SingleLiveEvent 非粘性)
+            viewModel.getMsg().observe(this, new Observer<Event<String>>() {
+                @Override
+                public void onChanged(Event<String> event) {
+                    if (event.getContentIfNotHandled() != null) {
+                        Log.i(MainActivity.class.getSimpleName(), "msg = " + event.getContentIfNotHandled());
+                    }
+                }
+            });
+        } else {
+            viewModel.getContent().setValue("新内容");
+            viewModel.getDesc().setValue("新的描述内容，发送非粘性消息");
+            viewModel.getMsg().setValue(new Event<>("MSG Event 新的描述内容，非粘性消息"));
+        }
+    }
+}
     
 ```
 
