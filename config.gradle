@@ -1,0 +1,6 @@
+ext = {
+    android : [
+            'androidx.appcompat:appcompat:1.1.0',
+            'androidx.constraintlayout:constraintlayout:1.1.0'
+    ]
+}
