@@ -1,6 +1,8 @@
-ext = {
-    android : [
-            'androidx.appcompat:appcompat:1.1.0',
-            'androidx.constraintlayout:constraintlayout:1.1.0'
+ext {
+    android = [
+            appcompat : "androidx.appcompat:appcompat:1.1.0",
+            constraintlayout: "androidx.constraintlayout:constraintlayout:1.1.0",
+            work_version : "2.4.0",
+            lifecycle_version: "2.2.0"
     ]
 }

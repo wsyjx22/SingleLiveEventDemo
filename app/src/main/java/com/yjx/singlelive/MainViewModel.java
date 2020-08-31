@@ -1,6 +1,7 @@
 package com.yjx.singlelive;
 
 import android.app.Application;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -29,4 +30,12 @@ public class MainViewModel extends AndroidViewModel {
     public SingleLiveEvent<String> getDesc() {
         return desc;
     }
+
+    @Override
+    protected void onCleared() {
+        super.onCleared();
+        Log.i("Main", "ViewModel clear");
+    }
+
+
 }

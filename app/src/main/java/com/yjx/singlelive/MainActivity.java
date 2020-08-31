@@ -1,12 +1,12 @@
 package com.yjx.singlelive;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
-
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.yjx.singlelive.databinding.ActivityMainBinding;
 
@@ -17,14 +17,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.i("Main", "onCreate");
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
         setContentView(view);
-        viewModel = ViewModelProvider.AndroidViewModelFactory.getInstance(getApplication()).create(MainViewModel.class);
+
+        // 创建ViewModel的方法
+        ViewModelProvider provider = new ViewModelProvider(getViewModelStore(), ViewModelProvider.AndroidViewModelFactory.getInstance(getApplication()));
+        viewModel =  provider.get("main", MainViewModel.class);
+
+        //viewModel = ViewModelProvider.AndroidViewModelFactory.getInstance(getApplication()).create(MainViewModel.class);
 
         binding.tvAdd.setOnClickListener(this);
         binding.tvContent.setOnClickListener(this);
+
+        Log.i("Main", viewModel.getContent().getValue() + "======");
 
         viewModel.getContent().setValue("默认数据");
         viewModel.getDesc().setValue("默认描述内容，非粘性消息");
@@ -54,11 +62,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
             }
         });
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
     }
 
     @Override
@@ -98,4 +101,35 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             viewModel.getMsg().setValue(new Event<>("MSG Event 新的描述内容，非粘性消息"));
         }
     }
+
+    @Override
+    protected void onResume() {
+        Log.i("Main", "onResume");
+        super.onResume();
+    }
+
+    @Override
+    protected void onRestart() {
+        Log.i("Main", "onRestart");
+        super.onRestart();
+    }
+
+    @Override
+    protected void onPause() {
+        Log.i("Main", "onPause");
+        super.onPause();
+    }
+
+    @Override
+    protected void onStop() {
+        Log.i("Main", "onStop");
+        super.onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        Log.i("Main", "onDestroy");
+        super.onDestroy();
+    }
+
 }
